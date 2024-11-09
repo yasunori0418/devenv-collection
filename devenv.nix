@@ -20,6 +20,17 @@
 
   # https://devenv.sh/scripts/
   scripts = {
+    helper = {
+      exec = ''
+        echo
+        echo Helper scripts you can run to make your development richer:
+        echo
+        ${pkgs.gnused}/bin/sed -e 's| |••|g' -e 's|=| |' <<EOF | ${pkgs.util-linuxMinimal}/bin/column -t | ${pkgs.gnused}/bin/sed -e 's|^|🦾 |' -e 's|••| |g'
+        ${lib.generators.toKeyValue {} (lib.mapAttrs (name: value: value.description) config.scripts)}
+        EOF
+      '';
+      description = "executable subcommand list with current repository";
+    };
     hello = {
       exec = ''
         echo hello from $GREET
@@ -29,13 +40,7 @@
   };
 
   enterShell = ''
-    echo 🦾
-    echo 🦾 Helper scripts you can run to make your development richer:
-    echo 🦾
-    ${pkgs.gnused}/bin/sed -e 's| |••|g' -e 's|=| |' <<EOF | ${pkgs.util-linuxMinimal}/bin/column -t | ${pkgs.gnused}/bin/sed -e 's|^|🦾 |' -e 's|••| |g'
-    ${lib.generators.toKeyValue {} (lib.mapAttrs (name: value: value.description) config.scripts)}
-    EOF
-    echo 🦾
+    helper
   '';
 
   # https://devenv.sh/tasks/
